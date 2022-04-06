@@ -66,21 +66,23 @@ app.get('/albums/:id', (request, response, next) => {
       console.log('The error while searching albums occurred: ', err)
     );
 });
+
 // get album track list
-app.get('/tracks/:id', (request, response) => {
-  const tracks = request.params.id;
+
+app.get('/album/:albumId', (request, response) => {
+  // const albumId = request.params.albumId;
+  const { albumId } = request.params;
   spotifyApi
     .getAlbumTracks(albumId)
     .then((data) => {
-      console.log('The received data from the API: ', data.body.items);
-      response.render('albums', {
-        albums: data.body.items
-      });
+      const tracks = data.body.items;
+      response.render('track-list', { tracks: tracks });
     })
-    .catch((err) =>
-      console.log('The error while searching album tracks occurred: ', err)
-    );
+    .catch((error) => {
+      console.log('There was an error loading the album track');
+    });
 });
+
 app.listen(3000, () =>
   console.log('My Spotify project running on port 3000 🎧 🥁 🎸 🔊')
 );
